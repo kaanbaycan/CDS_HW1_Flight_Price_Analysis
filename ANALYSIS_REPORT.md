@@ -1,25 +1,42 @@
 # Veri Analizi Bulguları (Clean_Dataset.csv)
 
-Bu rapor, uçuş veri seti üzerinde yapılan temel istatistiksel analizleri, aykırı değer tespitini ve değişkenler arası ilişkileri içermektedir.
+Bu rapor, uçuş veri seti üzerinde yapılan detaylı istatistiksel analizleri, IQR tabanlı aykırı değer hesaplamalarını ve değişkenler arası ilişkileri içermektedir.
 
 ## 1. Temel İstatistikler (Describe)
-- **Süre (Duration):** Ortalama uçuş süresi yaklaşık **12.22 saat**tir. Minimum süre 0.83 saat iken, maksimum süre 49.83 saattir.
-- **Kalan Gün (Days Left):** Biletlerin uçuşa ortalama **26 gün** kala alındığı görülmektedir.
-- **Fiyat (Price):** Ortalama bilet fiyatı **20,889** birimdir. Standart sapmanın (22,697) ortalamadan yüksek olması, fiyatlarda büyük bir değişkenlik olduğunu (muhtemelen Ekonomi/Business sınıfı farkından dolayı) göstermektedir.
+- **Süre (Duration):** Ortalama 12.22 saat.
+- **Kalan Gün (Days Left):** Ortalama 26 gün.
+- **Fiyat (Price):** Ortalama 20,889 birim.
 
-## 2. Aykırı Değerler (Outliers - IQR Yöntemi)
-- **Duration:** 2,110 adet aykırı değer tespit edilmiştir. Bu değerler normalden çok daha uzun süren uçuşları temsil eder.
-- **Days Left:** Aykırı değer bulunmamaktadır. Veri seti 1-49 gün aralığında homojen dağılmıştır.
-- **Price:** 123 adet aykırı değer tespit edilmiştir. Bunlar pazar ortalamasının çok üzerindeki lüks veya son dakika biletlerini temsil edebilir.
+## 2. Detaylı Aykırı Değer (IQR) Hesaplamaları
+Aykırı değerler $Q1 - 1.5 \times IQR$ ve $Q3 + 1.5 \times IQR$ formülleri kullanılarak tespit edilmiştir.
+
+### A. Uçuş Süresi (Duration)
+- **Q1 (25%):** 6.83
+- **Q3 (75%):** 16.17
+- **IQR:** 9.34
+- **Alt Sınır:** -7.18
+- **Üst Sınır:** 30.18
+- **Tespit Edilen Aykırı Değer:** 2,110 (30.18 saatten uzun uçuşlar)
+
+### B. Kalan Gün (Days Left)
+- **Q1 (25%):** 15.00
+- **Q3 (75%):** 38.00
+- **IQR:** 23.00
+- **Alt Sınır:** -19.50
+- **Üst Sınır:** 72.50
+- **Tespit Edilen Aykırı Değer:** 0 (Veri seti sınırları içerisinde)
+
+### C. Fiyat (Price)
+- **Q1 (25%):** 4,783.00
+- **Q3 (75%):** 42,521.00
+- **IQR:** 37,738.00
+- **Alt Sınır:** -51,824.00
+- **Üst Sınır:** 99,128.00
+- **Tespit Edilen Aykırı Değer:** 123 (99,128 birimden pahalı biletler)
 
 ## 3. Korelasyon Analizi
-- **Süre ve Fiyat (0.204):** Pozitif ancak zayıf bir ilişki vardır. Uçuş süresi arttıkça fiyatın artma eğilimi olsa da bu belirleyici tek faktör değildir.
-- **Kalan Gün ve Fiyat (-0.091):** Negatif ve çok zayıf bir ilişki vardır. Genel beklentinin aksine, bu veri setinde uçuşa kalan gün sayısının fiyat üzerindeki doğrudan etkisi (tek başına) düşük görünmektedir.
+- **Süre ve Fiyat:** 0.204 (Düşük Pozitif)
+- **Kalan Gün ve Fiyat:** -0.091 (Negatif)
 
-## 4. Görselleştirme (Histogramlar)
-- **Duration:** Veriler sağa çarpıktır (right-skewed). Çoğu uçuş 5-20 saat arasındadır.
-- **Days Left:** Neredeyse üniform bir dağılım sergilemektedir; her gün aralığında benzer sayıda veri bulunmaktadır.
-- **Price:** Dağılımın bimodal (iki tepeli) olduğu veya geniş bir kuyruğa sahip olduğu gözlenmektedir. Bu durum, farklı kabin sınıflarının fiyatlandırma politikalarını yansıtmaktadır.
-
----
-*Not: Görsel grafikler `histograms.png` dosyasında mevcuttur.*
+## 4. Görselleştirme
+Detaylı grafikler ve kümeleme analizleri ekteki `histograms.png` ve `cluster_scatter.png` dosyalarında mevcuttur.

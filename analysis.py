@@ -14,20 +14,38 @@ print("\n")
 
 # 2) Outlier Detection (IQR Method)
 numeric_cols = df.select_dtypes(include=[np.number]).columns
-outliers_info = {}
+outliers_summary = []
 
+print("--- DETAILED IQR OUTLIER ANALYSIS ---")
 for col in numeric_cols:
     Q1 = df[col].quantile(0.25)
     Q3 = df[col].quantile(0.75)
     IQR = Q3 - Q1
     lower_bound = Q1 - 1.5 * IQR
     upper_bound = Q3 + 1.5 * IQR
+    
     outliers = df[(df[col] < lower_bound) | (df[col] > upper_bound)]
-    outliers_info[col] = len(outliers)
+    
+    col_info = {
+        'column': col,
+        'Q1': Q1,
+        'Q3': Q3,
+        'IQR': IQR,
+        'lower_bound': lower_bound,
+        'upper_bound': upper_bound,
+        'count': len(outliers)
+    }
+    outliers_summary.append(col_info)
+    
+    print(f"Column: {col}")
+    print(f"  Q1 (25%): {Q1:.2f}")
+    print(f"  Q3 (75%): {Q3:.2f}")
+    print(f"  IQR: {IQR:.2f}")
+    print(f"  Lower Bound: {lower_bound:.2f}")
+    print(f"  Upper Bound: {upper_bound:.2f}")
+    print(f"  Outliers Detected: {len(outliers)}")
+    print("-" * 30)
 
-print("--- OUTLIERS (IQR) ---")
-for col, count in outliers_info.items():
-    print(f"{col}: {count} outliers detected")
 print("\n")
 
 # 3) Correlation
